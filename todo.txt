@@ -1,0 +1,5 @@
+- add autodetect hw locality with hwloc.
+- api for hwloc in web framework.
+- api for restart, stop, play with C
+- better look and feel.
+

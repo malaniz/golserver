@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <title> GoL Viewer </title>
+        <script src="/js/aloader.js"></script>
+        <script src="/js/main.js"></script>
+        <style> 
+            td { height: 2px; width: 1px; border: 1px solid #ccc; }
+            .header { 
+                padding: 25px;
+                font-size: 14px;
+            }
+            .container { width: 720px;  
+                border: 1px solid #ccc;
+                margin-top: 30px;
+            }
+            .c_black { background-color: #000; }
+            .c_white { background-color: #ccc; } 
+            .footer { 
+                padding: 25px;
+                font-size: 10px;
+                text-align: right;
+            }
+ 
+        </style>
+    </head>
+    <body>
+    <center>
+    <div class="container showgrid">
+        <div class="header"> Game of LIFE viewer </div>
+        <div id="render"> RENDERING ... </div>
+        <div id="commands"> 
+            <input type="button" value="Stop">
+            <input type="button" value=" + ">
+            <input type="button" value=" - ">
+            <input type="button" value="Init">
+
+        </div>
+        <div class="footer"> Developed by malaniz</div>
+    </div>
+    </center>
+    </body>
+</html>
