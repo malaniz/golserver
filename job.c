@@ -45,9 +45,9 @@ void job_next(job_t j, int y, int x,
         res = ( xx == 3 ) ? 1: 0;
     } else {
         res = ( xx < 2  )? 0:
-              ( xx > 3  )? 0:  
+              ( xx > 3  )? 0:
               ( xx == 2 )? 1:
-              ( xx == 3 )? 1: -1; 
+              ( xx == 3 )? 1: -1;
     }
     j->partial_board[y][x] = res;
 }
@@ -82,6 +82,14 @@ void job_evolution(job_t j)
             job_next(j, y, x, up, dw, rt, lt, e1, e2, e3, e4); 
         }
     }
+    // barrier 
+     int rc = pthread_barrier_wait(&barr);
+     if(rc != 0 && rc != PTHREAD_BARRIER_SERIAL_THREAD)
+     {
+         printf("Could not wait on barrier\n");
+         exit(-1);
+     }
+
     job_push(j);
 }
 
@@ -89,10 +97,16 @@ void job_evolution(job_t j)
 void_t job_run(void_t _j)
 {
     job_t j = (job_t)_j;
-    int iterations = 200;
+    int iterations = 9999;
+    int c = 0;
     while(iterations){
         job_evolution(j);
-        usleep(100000);
         iterations--;
+        usleep(100000);
+        c = ( c + 1 ) % NUM_THREADS;
+        //map_corebind(topology, c);
     }
+    c = 0;
+
+    pthread_exit(NULL);
 }

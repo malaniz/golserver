@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include <pthread.h>
+#include "mapping.h"
 
 
 #define MAX_Y 40 
@@ -26,25 +27,27 @@ struct job {
     int y_start, y_end;
     int id;  
 };
+
 // types
-typedef void* void_t;
+typedef void*       void_t;
 typedef struct job* job_t;
 
-int             board[MAX_Y][MAX_X];
-pthread_t       threads[NUM_THREADS];
-job_t           jobs[NUM_THREADS];
-pthread_mutex_t mutex;
-pthread_attr_t  attr;
-void_t          status;
+int                 board[MAX_Y][MAX_X];
+pthread_t           threads[NUM_THREADS];
+job_t               jobs[NUM_THREADS];
+pthread_barrier_t   barr;
+void_t              status;
 
+map_t               topology;
 
-job_t job_new();
-void  job_show(job_t j);
-void  job_pull(job_t j);
-void  job_push(job_t j);
-void  job_next(job_t j, int y, int x, int up, int dw, int rt, int lt, int e1, 
-                int e2, int e3, int e4); 
-void job_evolution(job_t j);
-void_t job_run(void_t j);
+job_t               job_new();
+void                job_show(job_t j);
+void                job_pull(job_t j);
+void                job_push(job_t j);
+void                job_next(job_t j, int y, int x, int up, 
+                             int dw, int rt, int lt, int e1, 
+                             int e2, int e3, int e4); 
+void                job_evolution(job_t j);
+void_t              job_run(void_t j);
 
 

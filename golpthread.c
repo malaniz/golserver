@@ -1,5 +1,8 @@
+#define _XOPEN_SOURCE 600
 #include "job.h"
-
+/*
+ * Problems with syncronization
+ */
 
 void board_init()
 {
@@ -30,7 +33,7 @@ void board_show()
 
 void init_jobs()
 {
-    int             cx, cy, pos;
+    int cx, cy, pos;
 
 
     pos = 0;
@@ -65,7 +68,15 @@ static int run(lua_State* L)
     int i, rc;
     board_init();
 
+    topology = map_discover();
+
     init_jobs();
+    // Barrier initialization
+    if(pthread_barrier_init(&barr, NULL, NUM_THREADS))
+    {
+        printf("Could not create a barrier\n");
+        return -1;
+    }
     for (i=0; i<NUM_THREADS; i++) { 
         rc = pthread_create(&threads[i], NULL, job_run, (void_t)jobs[i]); 
     }
@@ -88,7 +99,6 @@ static int board_str(lua_State* L)
     return 1;
 }
 
-
 int luaopen_golpthread(lua_State *L) 
 {
     lua_register(L, "doit", run);
@@ -96,21 +106,3 @@ int luaopen_golpthread(lua_State *L)
     return 0;
 }
 
-
-/*
-int main() 
-{
-
-
-    
-    while(1) {
-        system("clear");
-        board_show();
-        
-        usleep(50000);
-    }
-    printf("%s\n", board_str());
-
-    return 0;
-}
-*/
