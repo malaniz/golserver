@@ -4,7 +4,10 @@ job_t job_new()
 {
     int i, k;
     job_t j = (job_t) malloc (sizeof(struct job)); 
-    //j->partial_board = (int*) malloc (sizeof(int)*xlong*ylong); 
+    j->partial_board = malloc (sizeof(int*)*ylong); 
+    for (i=0; i < ylong; i++) {
+        j->partial_board[i] = malloc (sizeof(int)*xlong); 
+    }
     j->id = -1;
     return j;
 }
@@ -62,16 +65,15 @@ void job_evolution(job_t j)
         e1, e2, e3, e4,
         ys = j->y_start, ye = j->y_end,
         xs = j->x_start, xe = j->x_end;
-
     job_pull(j);
     for (y=0; y< ylong; y++) {
         for (x=0; x<xlong ; x++) {
             // compute x neightbors as torus 
             // never go to the limit of board slice
-            l_x = x - 1 % MAX_X;
-            r_x = x + 1 % MAX_X;
-            u_y = y - 1 % MAX_Y;
-            d_y = y + 1 % MAX_Y;
+            l_x = x==0 ? MAX_X-1: x - 1;
+            r_x = (x + 1 )% MAX_X;
+            u_y = y==0 ? MAX_Y-1: y -1 ;    
+            d_y = (y + 1 )% MAX_Y;
             rt = board[y][r_x];
             lt = board[y][l_x];
             up = board[u_y][x];
@@ -102,8 +104,8 @@ void_t job_run(void_t _j)
     int c = 0;
     while(iterations){
         job_evolution(j);
-        iterations--;
-        usleep(100000);
+        //iterations--;
+        //usleep(100000);
         c = ( c + 1 ) % NUM_THREADS;
         //map_corebind(topology, c);
     }

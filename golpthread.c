@@ -2,27 +2,33 @@
 #include "job.h"
 #include <math.h>
 map_t               topology;
-job_t               jobs[NUM_THREADS];
+job_t*               jobs;
 
 
-int logarithm(base, x)
-{
-    return (int)(log(x) / log(base));
-}
 
 
-/*
 void globals_init()
 {
+    int i;
+
+    MAX_Y = 40;
+    MAX_X = 80;
+
+
     topology = map_discover();
     NUM_THREADS = map_ncores(topology);
-    nboard = logarithm(2, NUM_THREADS);
+    nboard = (int)( log(NUM_THREADS+1) / log(2)); 
     ylong  = MAX_Y / nboard;
     xlong  = MAX_X / nboard;
+    printf ("ylong: %d, xlong: %d \n", ylong, xlong);
 
-    threads = (pthread_t) malloc (sizeof(pthread_t)*NUM_THREADS);
+    board = malloc (sizeof(int*)*MAX_Y);
+    for (i=0; i< MAX_Y; i++) {
+        board[i] = malloc(sizeof(int)* MAX_X);
+    }
+    threads = malloc (sizeof(pthread_t)*NUM_THREADS);
+    jobs    = malloc (sizeof(job_t)*NUM_THREADS);
 }
-*/
 
 void board_init()
 {
@@ -38,22 +44,11 @@ void board_init()
 }
 
 
-void board_show()
-{
-    int y, x;
-    for (y=0; y<MAX_Y; y++) {
-        for (x=0; x<MAX_X; x++) {
-            if (board[y][x] == 1){ printf("#"); }
-            else                 { printf("."); }
-        }
-        printf ("\n");
-    }
-}
-
 void init_jobs()
 {
     int cx, cy, pos;
 
+    printf("%d\n", nboard);
     pos = 0;
     for (cy=0; cy<nboard; cy++) {
         for (cx=0; cx<nboard; cx++) {
@@ -86,7 +81,6 @@ static int run(lua_State* L)
     int i, rc;
     globals_init();
     board_init();
-
 
     init_jobs();
     // Barrier initialization

@@ -30,7 +30,7 @@ int map_corebind(map_t m, int cpu)
 
 int map_ncores(map_t m) 
 {
-    return hwloc_get_nbobjs_by_depth(m->topology, m->coredepth) ;
+    return 4;//hwloc_get_nbobjs_by_depth(m->topology, m->coredepth) ;
 }
 
 int map_destroy(map_t m) 
