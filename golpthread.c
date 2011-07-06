@@ -1,13 +1,31 @@
 #define _XOPEN_SOURCE 600
 #include "job.h"
-/*
- * Problems with syncronization
- */
+#include <math.h>
+map_t               topology;
+job_t               jobs[NUM_THREADS];
+
+
+int logarithm(base, x)
+{
+    return (int)(log(x) / log(base));
+}
+
+
+
+void globals_init()
+{
+    topology = map_discover();
+    NUM_THREADS = map_ncores(topology);
+    nboard = logarithm(2, NUM_THREADS);
+    ylong  = MAX_Y / nboard;
+    xlong  = MAX_X / nboard;
+
+    threads = (pthread_t) malloc (sizeof(pthread_t)*NUM_THREADS);
+}
 
 void board_init()
 {
     int y, x;
-    /* Simple "srand()" seed: just use "time()" */
     unsigned int iseed = (unsigned int)time(NULL);
     srand(iseed);
 
@@ -34,7 +52,6 @@ void board_show()
 void init_jobs()
 {
     int cx, cy, pos;
-
 
     pos = 0;
     for (cy=0; cy<nboard; cy++) {
@@ -66,9 +83,9 @@ void init_jobs()
 static int run(lua_State* L) 
 {
     int i, rc;
+    globals_init();
     board_init();
 
-    topology = map_discover();
 
     init_jobs();
     // Barrier initialization

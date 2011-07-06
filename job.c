@@ -4,6 +4,7 @@ job_t job_new()
 {
     int i, k;
     job_t j = (job_t) malloc (sizeof(struct job)); 
+    j->partial_board = (int*) malloc (sizeof(int)*xlong*ylong); 
     j->id = -1;
     return j;
 }
