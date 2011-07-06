@@ -11,7 +11,7 @@ int logarithm(base, x)
 }
 
 
-
+/*
 void globals_init()
 {
     topology = map_discover();
@@ -22,6 +22,7 @@ void globals_init()
 
     threads = (pthread_t) malloc (sizeof(pthread_t)*NUM_THREADS);
 }
+*/
 
 void board_init()
 {

@@ -10,7 +10,7 @@
 //structs 
 struct job {
     //parcial board
-    int* partial_board;
+    int partial_board[ylong][xlong];
     int x_start, x_end;
     int y_start, y_end;
     int id;  
