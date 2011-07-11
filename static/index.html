@@ -28,7 +28,15 @@
     <div class="container showgrid">
         <div class="header"> Game of LIFE viewer </div>
         <div id="commands"> 
-            <input type="button" value="Run">
+            <fieldset>
+                <legend> Run your GOL game </legend>
+                <label> Height:<input type="text" value="" id=h>
+                </label>
+                <label> Width:<input type="text" value="" id=w>
+                </label>
+                <input type="button" value="Run" id=run>
+            </fieldset>
+            </br>
             <input type="button" value="Stop">
             <input type="button" value=" + ">
             <input type="button" value=" - ">

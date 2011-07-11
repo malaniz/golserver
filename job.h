@@ -2,9 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "mapping.h"
 
-// boards
+#include "mapping.h"
 #include "globals.h"
 
 //structs 
@@ -14,14 +13,14 @@ struct job {
     int   x_start, x_end;
     int   y_start, y_end;
     int   id;  
+    int   core;
 };
 
 // types
 typedef struct job* job_t;
-
 void_t              status;
 
-
+// methods
 job_t               job_new();
 void                job_show(job_t j);
 void                job_pull(job_t j);

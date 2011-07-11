@@ -96,20 +96,21 @@ void job_evolution(job_t j)
     job_push(j);
 }
 
+#include "measure.h"
 
 void_t job_run(void_t _j)
 {
     job_t j = (job_t)_j;
-    int iterations = 9999;
-    int c = 0;
+    int iterations = 999;
+
+    map_corebind(topology, j->core);
+    timer = measure_new();
     while(iterations){
         job_evolution(j);
-        //iterations--;
+        iterations--;
         //usleep(100000);
-        c = ( c + 1 ) % NUM_THREADS;
-        //map_corebind(topology, c);
     }
-    c = 0;
-
+    measure_finish(timer);
+    measure_show(timer);
     pthread_exit(NULL);
 }

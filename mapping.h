@@ -5,6 +5,7 @@
 struct map {
     int topodepth;
     int coredepth;
+    int threaddepth;
     hwloc_topology_t topology;
     hwloc_cpuset_t cpuset;
 };

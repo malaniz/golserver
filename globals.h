@@ -13,3 +13,4 @@ typedef void*       void_t;
 pthread_barrier_t   barr;
 
 
+map_t               topology;
