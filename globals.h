@@ -14,3 +14,5 @@ pthread_barrier_t   barr;
 
 
 map_t               topology;
+
+measure_t*          measures;

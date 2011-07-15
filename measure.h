@@ -1,10 +1,19 @@
 #include <time.h>
 #include <sys/timeb.h>
+#include <stdlib.h>
+#include <stdio.h>
 
-#define SEC2NSEC((s) * 1000 * 1000 * 1000)
-#define RESET_TMP()     clock_gettime(CLOCK_REALTIME, &time1)
-#define SET_TMP()       clock_gettime(CLOCK_REALTIME, &time2)
-#define SEC_TRANS()     (time2.tv_sec - time1.tv_sec)
-#define NSEC_TRANS()    (time2.tv_nsec - time1.tv_nsec)
 
-void diff_time( timespec *t_fin, timespec *t_ini, timespec *delta );
+struct measure {
+    struct timespec begin;
+    struct timespec end;
+    struct timespec delta;
+    char   __str__ [256];
+};
+
+typedef struct measure* measure_t;
+
+measure_t measure_new();
+measure_t measure_finish(measure_t);
+//measure_t measure_show(measure_t);
+

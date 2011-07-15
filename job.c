@@ -2,7 +2,7 @@
 
 job_t job_new()
 {
-    int i, k;
+    int i;
     job_t j = (job_t) malloc (sizeof(struct job)); 
     j->partial_board = malloc (sizeof(int*)*ylong); 
     for (i=0; i < ylong; i++) {
@@ -15,8 +15,8 @@ job_t job_new()
 void job_pull(job_t j) 
 {
     int y, x,
-        ys = j->y_start, ye = j->y_end,
-        xs = j->x_start, xe = j->x_end;
+        ys = j->y_start,
+        xs = j->x_start;
     for (y=0; y < ylong; y++) {
         for (x = 0; x < xlong; x++) {
             j->partial_board[y][x] = board[ys+y][xs+x];
@@ -27,8 +27,8 @@ void job_pull(job_t j)
 void job_push(job_t j) 
 {
     int y, x,
-        ys = j->y_start, ye = j->y_end,
-        xs = j->x_start, xe = j->x_end;
+        ys = j->y_start,
+        xs = j->x_start;
 
     for (y=0; y < ylong; y++) {
         for (x = 0; x < xlong; x++) {
@@ -62,9 +62,8 @@ void job_evolution(job_t j)
     int x, y, 
         up, dw, rt, lt, 
         r_x, l_x, u_y, d_y, 
-        e1, e2, e3, e4,
-        ys = j->y_start, ye = j->y_end,
-        xs = j->x_start, xe = j->x_end;
+        e1, e2, e3, e4;
+
     job_pull(j);
     for (y=0; y< ylong; y++) {
         for (x=0; x<xlong ; x++) {
@@ -96,21 +95,20 @@ void job_evolution(job_t j)
     job_push(j);
 }
 
-#include "measure.h"
 
 void_t job_run(void_t _j)
 {
     job_t j = (job_t)_j;
     int iterations = 999;
+    measures[j->id] = measure_new();
 
     map_corebind(topology, j->core);
-    timer = measure_new();
     while(iterations){
         job_evolution(j);
         iterations--;
         //usleep(100000);
     }
-    measure_finish(timer);
-    measure_show(timer);
+    measure_finish(measures[j->id]);
+
     pthread_exit(NULL);
 }

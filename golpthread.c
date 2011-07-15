@@ -1,6 +1,6 @@
 #define _XOPEN_SOURCE 600
-#include "job.h"
 #include <math.h>
+#include "job.h"
 
 job_t*               jobs;
 
@@ -23,9 +23,26 @@ void globals_init(int width, int height)
     for (i=0; i< MAX_Y; i++) {
         board[i] = malloc(sizeof(int)* MAX_X);
     }
-    threads = malloc (sizeof(pthread_t)*NUM_THREADS);
-    jobs    = malloc (sizeof(job_t)*NUM_THREADS);
+    threads  = malloc (sizeof(pthread_t )*NUM_THREADS);
+    jobs     = malloc (sizeof(job_t     )*NUM_THREADS);
+    measures = malloc (sizeof(measure_t)*NUM_THREADS);
 }
+
+void globals_destroy()
+{
+    int i;
+
+    for (i=0; i< MAX_Y; i++) {
+        free(board[i]);
+    }
+    free(board);
+    
+    free(threads);
+    free(jobs);
+    free(measures);
+    //destroy topology
+}
+
 
 void board_init()
 {
@@ -123,6 +140,10 @@ static int board_str(lua_State* L)
         sprintf (s, "%s$", s);
     }
     lua_pushstring(L, s);
+    int i;
+    for (i = 0;i<NUM_THREADS; i++) {
+        printf("thread %d: %s\n", i, measures[i]->__str__);
+    }
     return 1;
 }
 

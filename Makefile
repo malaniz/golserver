@@ -1,13 +1,13 @@
-all: golp 
+all: golpthread 
 CC = gcc 
-CFLAGS = -g -pthread -fPIC 
+CFLAGS = -g -Wall -pthread -fPIC -lrt 
 LUAFLAGS = -I/usr/local/include -llua  
 HWLOCCFLAGS = -I/usr/local/include -I/usr/include/libxml2
 HWLOCLIB = -L/usr/local/lib -lhwloc
 
 
 
-golp: job.o golpthread.o mapping.o 
+golpthread: job.o golpthread.o mapping.o measure.o
 	$(CC) $(CFLAGS) $(LUAFLAGS) $(HWLOCLIB) -shared mapping.o job.o golpthread.o measure.o -o golpthread.so 
 
 mapping.o: mapping.h mapping.c
@@ -21,5 +21,6 @@ job.o: job.c job.h
 
 measure.o: measure.h measure.c
 	$(CC) $(CFLAGS) -c measure.c
+
 clean:
 	rm -rf *o golpthread.so 
