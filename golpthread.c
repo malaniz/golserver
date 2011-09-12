@@ -5,10 +5,11 @@
 job_t*               jobs;
 
 
-void globals_init(int width, int height)
+void globals_init(int width, int height, int generations)
 {
     int i;
 
+    GENERATIONS = generations;
     MAX_Y = height;
     MAX_X = width;
 
@@ -17,7 +18,7 @@ void globals_init(int width, int height)
     nboard = (int)( log(NUM_THREADS+1) / log(2)); 
     ylong  = MAX_Y / nboard;
     xlong  = MAX_X / nboard;
-    printf ("ylong: %d, xlong: %d \n", ylong, xlong);
+//    printf ("ylong: %d, xlong: %d \n", ylong, xlong);
 
     board = malloc (sizeof(int*)*MAX_Y);
     for (i=0; i< MAX_Y; i++) {
@@ -26,6 +27,10 @@ void globals_init(int width, int height)
     threads  = malloc (sizeof(pthread_t )*NUM_THREADS);
     jobs     = malloc (sizeof(job_t     )*NUM_THREADS);
     measures = malloc (sizeof(measure_t)*NUM_THREADS);
+    measures[0] = measure_new();
+    measures[1] = measure_new();
+    measures[2] = measure_new();
+    measures[3] = measure_new();
 }
 
 void globals_destroy()
@@ -94,22 +99,24 @@ void init_jobs()
 
 static int run(lua_State* L) 
 {
-    int i, rc, sizeparams, width, height, viewer;
+    int i, rc, sizeparams, width, height, viewer, generations;
 
     sizeparams = lua_gettop(L);
     viewer = 1;
     if (sizeparams < 1) {
         width = 80;
         height = 40;
-    } else if (sizeparams == 2) {
+        generations = 100;
+    } else if (sizeparams == 3) {
         height  = lua_tonumber(L, 1);
         width = lua_tonumber(L, 2);
+        generations = lua_tonumber(L, 3);
     } else {
-        lua_pushstring(L, "doit: 2 or 0 parameters");
+        lua_pushstring(L, "doit: 3 or 0 parameters");
         lua_error(L);
     }
 
-    globals_init(width, height);
+    globals_init(width, height, generations);
     board_init();
 
     init_jobs();
@@ -140,9 +147,29 @@ static int board_str(lua_State* L)
         sprintf (s, "%s$", s);
     }
     lua_pushstring(L, s);
-    int i;
-    for (i = 0;i<NUM_THREADS; i++) {
-        printf("thread %d: %s\n", i, measures[i]->__str__);
+    return 1;
+}
+
+
+static int statistics(lua_State* L)
+{
+    int i, top;
+
+    if (measures[0]->val == 0 || 
+        measures[1]->val == 0 || 
+        measures[2]->val == 0 || 
+        measures[3]->val == 0 ) {
+
+        lua_pushnil(L);
+    } else {
+        lua_newtable(L);
+        top = lua_gettop(L);
+        for (i = 0;i<NUM_THREADS; i++) {
+            printf("thread %d: %s\n", i, measures[i]->__str__);
+            lua_pushnumber(L, i);
+            lua_pushnumber(L, measures[i]->val);
+            lua_settable(L, top);
+        }
     }
     return 1;
 }
@@ -180,6 +207,7 @@ int luaopen_golpthread(lua_State *L)
 {
     lua_register(L, "doit", run);
     lua_register(L, "data", board_str);
+    lua_register(L, "stats", statistics);
     return 0;
 }
 

@@ -47,6 +47,7 @@ int map_nthreads(map_t m)
 {
     int res = hwloc_get_nbobjs_by_depth(m->topology, m->threaddepth) ;
     return res;
+    //return 1;
 }
 
 int map_destroy(map_t m) 

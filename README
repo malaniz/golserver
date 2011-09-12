@@ -1,6 +1,0 @@
-Overview
-========
-A Game Of Life (GoL) with pthreads and webserver.
-The Game it is made with C language and pthreads library.
-The webserver it is developed with Lua language and wsapi-xavante server.
-

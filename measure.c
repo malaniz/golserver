@@ -25,18 +25,24 @@ void diff_time(
         }
     }
 }
+char* time2str(time_t* t)
+{
+    return ctime(t);
+}
+
 
 measure_t measure_new() 
 {
     measure_t t =  malloc (sizeof(struct measure));
     sprintf (t->__str__, "TIME INVALID" );
-    clock_gettime(CLOCK_REALTIME, &t->begin);
+    t->val = 0;
     return t;
 }
 
-char* time2str(time_t* t)
+measure_t measure_start(measure_t t) 
 {
-    return ctime(t);
+    clock_gettime(CLOCK_REALTIME, &t->begin);
+    return t;
 }
 
 measure_t measure_finish(measure_t t)
@@ -50,9 +56,7 @@ measure_t measure_finish(measure_t t)
     d = t->delta.tv_sec*1000000000 + t->delta.tv_nsec;
 
     sprintf(t->__str__, "<%lu, %lu, %lu>", b, e, d);
+    t->val = d;
 
     return t;
 }
-
-
-

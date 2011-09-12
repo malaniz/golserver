@@ -99,14 +99,13 @@ void job_evolution(job_t j)
 void_t job_run(void_t _j)
 {
     job_t j = (job_t)_j;
-    int iterations = 999;
-    measures[j->id] = measure_new();
+    int iterations = GENERATIONS;
+    measure_start(measures[j->id]);
 
     map_corebind(topology, j->core);
     while(iterations){
         job_evolution(j);
         iterations--;
-        //usleep(100000);
     }
     measure_finish(measures[j->id]);
 
