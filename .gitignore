@@ -2,3 +2,4 @@ golpthread.so
 .backupvim*
 .*~
 *.o
+data*
