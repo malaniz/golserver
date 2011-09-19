@@ -20,9 +20,5 @@ golserver:dispatch_get(function (web)
 end, "/")
 
 
-
-
-
 golserver:dispatch_static("/static/.+")
-golserver:dispatch_static("/js/.+")
 
