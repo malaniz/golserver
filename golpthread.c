@@ -180,7 +180,9 @@ static int statistics(lua_State* L)
     if (measures[0]->val == 0 || 
         measures[1]->val == 0 || 
         measures[2]->val == 0 || 
-        measures[3]->val == 0 ) {
+        measures[3]->val == 0 || 
+        measures[4]->val == 0 || 
+        measures[5]->val == 0 ) {
 
         lua_pushnil(L);
     } else {
