@@ -3,8 +3,8 @@ require "golpthread"
 data_dir = "data"
 
 experiments = { 
-    sizes = { 1024, 1024*2},
-    generations = { 5, 100, 10 }
+    sizes = { 1024, 1024*2, 1024*4},
+    generations = { 100, 1000, 10000 }
 }
 
 
