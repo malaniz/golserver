@@ -175,14 +175,20 @@ static int board_str(lua_State* L)
 
 static int statistics(lua_State* L)
 {
-    int i, top;
+    int i, top, res = 0;
 
+    for (i=0; i<NUM_THREADS; i++) {
+      res = res || (measures[i]->val == 0);
+    }
+    /*
     if (measures[0]->val == 0 || 
         measures[1]->val == 0 || 
         measures[2]->val == 0 || 
         measures[3]->val == 0 || 
         measures[4]->val == 0 || 
         measures[5]->val == 0 ) {
+    */
+    if (res) {
 
         lua_pushnil(L);
     } else {
