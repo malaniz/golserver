@@ -31,10 +31,9 @@ void globals_init(int width, int height, int generations)
     threads  = malloc (sizeof(pthread_t )*NUM_THREADS);
     jobs     = malloc (sizeof(job_t     )*NUM_THREADS);
     measures = malloc (sizeof(measure_t)*NUM_THREADS);
-    measures[0] = measure_new();
-    measures[1] = measure_new();
-    measures[2] = measure_new();
-    measures[3] = measure_new();
+    for (i=0; i< NUM_THREADS; i++) {
+      measures[i] = measure_new();
+    }
 }
 
 void globals_destroy()
@@ -69,16 +68,16 @@ void board_init()
 
 void init_jobs()
 {
-    int cx, cy, pos;
+    int cx, cy, pos, i;
 
     //printf("%d\n", nboard);
+    /*
     pos = 0;
-//for (cy=0; cy<nboard; cy++) {
-    for (cy=0; cy<NUM_THREADS; cy++) {
+    for (cy=0; cy<nboard; cy++) {
         for (cx=0; cx<nboard; cx++) {
             jobs[pos] = job_new();
             jobs[pos]->id = pos;
-            jobs[pos]->x_start = cx * xlong;
+            jobs[pos]->x_start = 0 * xlong;
             jobs[pos]->x_end   = jobs[pos]->x_start + xlong;
             jobs[pos]->y_start = cy * ylong;
             jobs[pos]->y_end   = jobs[pos]->y_start + ylong;
@@ -91,6 +90,25 @@ void init_jobs()
             );
             pos++;
         }
+    }
+    */
+
+
+    printf("Entrando: threads %d \n", NUM_THREADS);
+    for (i=0; i<NUM_THREADS; i++) {
+            jobs[i] = job_new();
+            jobs[i]->id = i;
+            jobs[i]->x_start = 0 ;
+            jobs[i]->x_end   = xlong;
+            jobs[i]->y_start = i * ylong;
+            jobs[i]->y_end   = jobs[i]->y_start + ylong;
+            printf("job[%d] <xs:%d, xe:%d, ys:%d, ye:%d> \n", 
+                jobs[i]->id, 
+                jobs[i]->x_start,
+                jobs[i]->x_end,  
+                jobs[i]->y_start, 
+                jobs[i]->y_end
+            );
     }
 }
 
@@ -124,6 +142,7 @@ static int run(lua_State* L)
 
     init_jobs();
     // Barrier initialization
+    //
     if(pthread_barrier_init(&barr, NULL, NUM_THREADS))
     {
         printf("Could not create a barrier\n");

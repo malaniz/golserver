@@ -3,7 +3,7 @@ require "golpthread"
 data_dir = "data"
 
 experiments = { 
-    sizes = { 1024, 1024*2, 1024*4},
+    sizes = { 1200, 1200*2, 1200*4},
     generations = { 100, 1000, 10000 }
 }
 
