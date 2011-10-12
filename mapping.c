@@ -16,8 +16,8 @@ map_t map_discover()
 int map_corebind(map_t m, int thread)
 {
 
-    int cpu_thread = thread % 2;
-    int cpu = thread / 2;
+    int cpu_thread = 0;
+    int cpu = thread;
     printf ("i = %d, core = %d, thread = %d\n", thread, cpu, cpu_thread);
 
     hwloc_obj_t obj = hwloc_get_obj_by_depth(m->topology, m->coredepth, cpu+1 );
