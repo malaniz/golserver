@@ -15,10 +15,14 @@ void globals_init(int width, int height, int generations)
 
     topology = map_discover();
     NUM_THREADS = map_nthreads(topology);
-    nboard = (int)( log(NUM_THREADS+1) / log(2)); 
-    ylong  = MAX_Y / nboard;
+    //nboard = (int)( log(NUM_THREADS+1) / log(2)); 
+    //ylong  = MAX_Y / nboard;
+
+    nboard = 1;
+    printf("%d\n", NUM_THREADS);
+    ylong  = MAX_Y / NUM_THREADS;
     xlong  = MAX_X / nboard;
-//    printf ("ylong: %d, xlong: %d \n", ylong, xlong);
+    printf ("ylong: %d, xlong: %d \n", ylong, xlong);
 
     board = malloc (sizeof(int*)*MAX_Y);
     for (i=0; i< MAX_Y; i++) {
@@ -69,7 +73,8 @@ void init_jobs()
 
     //printf("%d\n", nboard);
     pos = 0;
-    for (cy=0; cy<nboard; cy++) {
+//for (cy=0; cy<nboard; cy++) {
+    for (cy=0; cy<NUM_THREADS; cy++) {
         for (cx=0; cx<nboard; cx++) {
             jobs[pos] = job_new();
             jobs[pos]->id = pos;
@@ -77,7 +82,6 @@ void init_jobs()
             jobs[pos]->x_end   = jobs[pos]->x_start + xlong;
             jobs[pos]->y_start = cy * ylong;
             jobs[pos]->y_end   = jobs[pos]->y_start + ylong;
-            /*
             printf("job[%d] <xs:%d, xe:%d, ys:%d, ye:%d> \n", 
                 jobs[pos]->id, 
                 jobs[pos]->x_start,
@@ -85,7 +89,6 @@ void init_jobs()
                 jobs[pos]->y_start, 
                 jobs[pos]->y_end
             );
-            */
             pos++;
         }
     }
